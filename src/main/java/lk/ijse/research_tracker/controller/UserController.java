@@ -12,6 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.sql.Date;
+
 @RestController
 @RequestMapping("api/v1/user")
 @CrossOrigin
@@ -39,8 +42,8 @@ public class UserController {
         System.out.println("register");
         try {
             System.out.println(userDTO);
-            String Role = "user";
-            userDTO.setRole(Role);
+            Date sqlDate = Date.valueOf(LocalDate.now());
+            userDTO.setCreatedAt(sqlDate);
             int res = userService.saveUser(userDTO);
             switch (res) {
                 case VarList.Created -> {

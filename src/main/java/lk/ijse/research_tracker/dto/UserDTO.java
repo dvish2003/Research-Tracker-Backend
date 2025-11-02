@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.UUID;
 
 
@@ -16,7 +18,6 @@ public class UserDTO {
     private String name;
     private String password;
     private String Role;
-    private boolean verified;
-    private String verificationCode;
+    private Date createdAt;
 
 }

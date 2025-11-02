@@ -9,6 +9,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.antlr.v4.runtime.misc.NotNull;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Data
@@ -27,6 +29,6 @@ public class User {
     private String password;
     @Column(nullable = false)
     private String Role;
-    private boolean verified;
-    private String verificationCode;
+    @Column(nullable = false)
+    private Date createdAt;
 }

@@ -33,6 +33,7 @@ public class AuthController {
     @PostMapping("/authenticate")
     public ResponseEntity<ResponseDTO> authenticate(@RequestBody UserDTO userDTO) {
         System.out.println("Come data from JS");
+        System.out.println("ddddddddddddddddddddddddd"+userDTO);
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(userDTO.getEmail(), userDTO.getPassword()));
@@ -74,9 +75,3 @@ public class AuthController {
 
 }
 
-/*
-*  User user = userRepository.findByEmail(userDTO.getEmail());
-            String verificationCode = VerificationCodeGenerator.generateCode(6);
-            user.setVerificationCode(verificationCode);
-            userRepository.save(user);
-            emailService.sendVerificationEmail(user.getEmail(), verificationCode);*/

@@ -67,13 +67,6 @@ public class WebSecurityConfig {
                         .requestMatchers(
                                 "/api/v1/auth/authenticate",
                                 "/api/v1/user/register",
-                                "/api/v1/user/verifyUser",
-                                "/api/v1/user/getUser",
-                                "/api/v1/note/saveNote",
-                                "/api/v1/note/deleteUserEmail",
-                                "/api/v1/note/deleteUseID",
-                                "/api/v1/note/getUserNoteByEmail",
-                                "/api/v1/note/updateNote",
                                 "/api/v1/auth/refreshToken",
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
@@ -92,9 +85,7 @@ public class WebSecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.setAllowedOrigins(List.of(
-                "http://localhost:63342",
-                "https://note-nexa-vishan-chathurangas-projects.vercel.app"
-        ));
+                "http://localhost:5173"        ));
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         source.registerCorsConfiguration("/**", config);

@@ -64,7 +64,16 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Override
     public int saveUser(UserDTO userDTO) {
-        return 0;
+        if (userRepository.existsByEmail(userDTO.getEmail().toLowerCase())) {
+            return VarList.Not_Acceptable;
+        } else {
+            User user = modelMapper.map(userDTO, User.class);
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            String encodedPassword = passwordEncoder.encode(userDTO.getPassword());
+            user.setPassword(encodedPassword);
+            userRepository.save(user);
+            return VarList.Created;
+        }
     }
 
     @Override
