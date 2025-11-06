@@ -20,7 +20,7 @@ import java.util.UUID;
 @Entity
 public class User {
     @Id
-@GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
     @Column(unique = true, nullable = false)
     private String email;
@@ -32,47 +32,7 @@ public class User {
     private String Role;
     @Column(nullable = false)
     private Date createdAt;
-
-}
-/*
-
-package lk.ijse.research_tracker.entity;
-
-import jakarta.persistence.*;
-import lombok.*;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
-
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-@Entity
-@Table(name = "users")
-public class User {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
-
-    @Column(unique = true, nullable = false)
-    private String email;
-
-    @Column(nullable = false)
-    private String fullName;
-
-    @Column(nullable = false)
-    private String password;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private String Role;
-
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
-
-    @OneToMany(mappedBy = "pi", cascade = CascadeType.ALL, orphanRemoval = true)
+     @OneToMany(mappedBy = "pi", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Project> projects;
 
     @OneToMany(mappedBy = "createdBy")
@@ -80,5 +40,5 @@ public class User {
 
     @OneToMany(mappedBy = "uploadedBy")
     private List<Document> documents;
+
 }
-*/

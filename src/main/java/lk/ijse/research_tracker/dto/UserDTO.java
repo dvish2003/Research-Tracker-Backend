@@ -22,31 +22,3 @@ public class UserDTO {
 
 }
 
-
-/*
-
-package lk.ijse.research_tracker.dto;
-
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.sql.Date;
-import java.time.LocalDateTime;
-import java.util.UUID;
-
-
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
-public class UserDTO {
-    private UUID id;
-    private String email;
-    private String name;
-    private String password;
-    private String Role;
-    private java.sql.Date createdAt;
-
-}
-*/

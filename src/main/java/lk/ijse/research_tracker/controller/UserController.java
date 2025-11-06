@@ -1,6 +1,5 @@
 package lk.ijse.research_tracker.controller;
 
-
 import lk.ijse.research_tracker.dto.AuthDTO;
 import lk.ijse.research_tracker.dto.ResponseDTO;
 import lk.ijse.research_tracker.dto.UserDTO;
@@ -13,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.sql.Date;
 
 @RestController
@@ -23,8 +23,7 @@ public class UserController {
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
 
-
-    //constructor injection
+    // constructor injection
     public UserController(UserService userService, UserRepository userRepository, JwtUtil jwtUtil) {
         this.userService = userService;
         this.userRepository = userRepository;
@@ -69,20 +68,26 @@ public class UserController {
         }
     }
 
+    @GetMapping("/allUsers")
+    public ResponseEntity<ResponseDTO> getAllUsers() {
+        try {
+            List<UserDTO> userList = userService.getAllUser();
 
-
+            return ResponseEntity.ok(new ResponseDTO(VarList.OK, "Success", userList));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseDTO(VarList.Internal_Server_Error, e.getMessage(), null));
+        }
+    }
 
     @GetMapping("/getUser")
     public ResponseEntity<ResponseDTO> getUser(@RequestParam String email) {
-        System.out.println("Get User Use " + email);
         UserDTO userDTO = userService.searchUser(email);
-        System.out.println("User id"+userDTO.getId());
         if (userDTO == null) {
-            System.out.println("User not found ");
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ResponseDTO(VarList.Not_Found, "User Not Found", null));
         }
         return ResponseEntity.ok(new ResponseDTO(VarList.OK, "Success", userDTO));
     }
 
-        }
+}

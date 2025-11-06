@@ -1,8 +1,5 @@
 package lk.ijse.research_tracker.service.custom.IMPL;
 
-
-
-
 import lk.ijse.research_tracker.Entity.User;
 import lk.ijse.research_tracker.dto.UserDTO;
 import lk.ijse.research_tracker.repo.UserRepository;
@@ -18,16 +15,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
 public class UserServiceImpl implements UserDetailsService, UserService {
-  /*  @Autowired
-    private MemberRepository memberRepository;*/
+
     @Autowired
     private UserRepository userRepository;
 
@@ -36,13 +30,14 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        System.out.println("Loading user by email: " + email);
         User user = userRepository.findByEmail(email);
-        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), getAuthority(user));
-    }
-
-    public UserDTO loadUserDetailsByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(username);
-        return modelMapper.map(user,UserDTO.class);
+        if (user == null) throw new UsernameNotFoundException("User not found with email: " + email);
+        return new org.springframework.security.core.userdetails.User(
+                user.getEmail(),
+                user.getPassword(),
+                getAuthority(user)
+        );
     }
 
     private Set<SimpleGrantedAuthority> getAuthority(User user) {
@@ -51,39 +46,57 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return authorities;
     }
 
-
-    @Override
-    public List<UserDTO> getAllUser() {
-        return List.of();
-    }
-
-    @Override
-    public List<UserDTO> getUsers() {
-        return List.of();
-    }
-
     @Override
     public int saveUser(UserDTO userDTO) {
+        System.out.println("userDTO in service: " + userDTO);
         if (userRepository.existsByEmail(userDTO.getEmail().toLowerCase())) {
-            return VarList.Not_Acceptable;
+            return VarList.Not_Acceptable; // 406
         } else {
+            System.out.println("userDTO before mapping: " + userDTO);
             User user = modelMapper.map(userDTO, User.class);
-            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-            String encodedPassword = passwordEncoder.encode(userDTO.getPassword());
-            user.setPassword(encodedPassword);
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            user.setPassword(encoder.encode(userDTO.getPassword()));
+            System.out.println("user entity to be saved: " + user);
             userRepository.save(user);
-            return VarList.Created;
+            return VarList.Created; // 201
         }
     }
 
     @Override
-    public int verifyUser(String email, String code) {
-        return 0;
+    public List<UserDTO> getAllUser() {
+        List<User> users = userRepository.findAll();
+        return users.stream()
+                .map(user -> modelMapper.map(user, UserDTO.class))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public UserDTO searchUser(String username) {
-        return null;
+    public UserDTO searchUser(String keyword) {
+        User user = userRepository.findByEmail(keyword);
+        if (user == null) {
+            user = userRepository.findByName(keyword);
+        }
+        if (user == null) return null;
+        return modelMapper.map(user, UserDTO.class);
     }
-};
 
+
+
+
+    @Override
+    public List<UserDTO> getUsers() {
+        User user =  userRepository.findAll().stream().findFirst().orElse(null);
+        if (user == null) return new ArrayList<>();
+        List<User> users = userRepository.findAll();
+        return users.stream()
+                .map(u -> modelMapper.map(u, UserDTO.class))
+                .collect(Collectors.toList());
+                
+    }
+
+    public UserDTO loadUserDetailsByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByEmail(username);
+        if (user == null) throw new UsernameNotFoundException("User not found");
+        return modelMapper.map(user, UserDTO.class);
+    }
+}

@@ -1,10 +1,4 @@
 package lk.ijse.research_tracker.config;
-/**
- * @author udarasan
- * @TimeStamp 2023-07-15 15:00
- * @ProjectDetails invoice_service
- */
-
 
 import lk.ijse.research_tracker.service.custom.IMPL.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,18 +55,22 @@ public class WebSecurityConfig {
     protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
-                /*.cors()
-                .and()*/
+                /*
+                 * .cors()
+                 * .and()
+                 */
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/api/v1/auth/authenticate",
                                 "/api/v1/user/register",
+                                "/api/v1/user/allUsers",
+                                "/api/v1/project/getAllProjects",
                                 "/api/v1/auth/refreshToken",
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
-                                "/swagger-ui.html").permitAll()
-                        .anyRequest().authenticated()
-                )
+                                "/swagger-ui.html")
+                        .permitAll()
+                        .anyRequest().authenticated())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .cors(Customizer.withDefaults())
@@ -85,7 +83,7 @@ public class WebSecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.setAllowedOrigins(List.of(
-                "http://localhost:5173"        ));
+                "http://localhost:5173"));
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         source.registerCorsConfiguration("/**", config);
